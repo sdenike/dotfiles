@@ -1,0 +1,61 @@
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/cask-fonts"
+tap "homebrew/core"
+tap "homebrew/services"
+brew "autoconf"
+brew "autojump"
+brew "cmake"
+brew "composer"
+brew "dnsmasq", restart_service: true
+brew "exiftool"
+brew "ffmpeg"
+brew "fzf"
+brew "gist"
+brew "gnupg", link: false
+brew "gnupg@1.4"
+brew "go"
+brew "gpg-agent"
+brew "guetzli"
+brew "htop"
+brew "jpeg-archive"
+brew "jpegoptim"
+brew "jq"
+brew "m-cli"
+brew "mailhog", restart_service: true
+brew "mariadb", restart_service: true
+brew "mas"
+brew "mr"
+brew "nginx", restart_service: true
+brew "nmap"
+brew "node"
+brew "php", restart_service: true
+brew "pinentry-mac"
+brew "rclone"
+brew "speedtest-cli"
+brew "vnstat", restart_service: true
+brew "wget"
+brew "wp-cli"
+brew "wp-cli-completion"
+brew "wpscan"
+brew "youtube-dl"
+brew "zsh-syntax-highlighting"
+cask "font-menlo-for-powerline"
+cask "font-meslo-for-powerline"
+mas "Droplr", id: 498672703
+mas "Evernote", id: 406056744
+mas "GAget", id: 968487158
+mas "iMovie", id: 408981434
+mas "JPEGmini", id: 498944723
+mas "Keynote", id: 409183694
+mas "LiveReload", id: 482898991
+mas "Magnet", id: 441258766
+mas "Micro Snitch", id: 972028355
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+mas "Pixelmator", id: 407963104
+mas "Rsizer", id: 976696748
+mas "Slack", id: 803453959
+mas "Telegram", id: 747648890
+mas "Tweetbot", id: 1384080005
+mas "Xcode", id: 497799835
