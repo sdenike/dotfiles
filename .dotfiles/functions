@@ -1,0 +1,142 @@
+# WPScan
+function wpscan() {
+     /usr/local/bin/wpscan -u "$1"
+}
+
+# Show all the names (CNs and SANs) listed in the SSL certificate
+# for a given domain
+function getcertnames() {
+        if [ -z "${1}" ]; then
+                echo "ERROR: No domain specified."
+                return 1
+        fi
+
+        local domain="${1}"
+        echo "Testing ${domain}…"
+        echo # newline
+
+        local tmp=$(echo -e "GET / HTTP/1.0\nEOT" \
+                | openssl s_client -connect "${domain}:443" 2>&1);
+
+        if [[ "${tmp}" = *"-----BEGIN CERTIFICATE-----"* ]]; then
+                local certText=$(echo "${tmp}" \
+                        | openssl x509 -text -certopt "no_header, no_serial, no_version, \
+                        no_signame, no_validity, no_issuer, no_pubkey, no_sigdump, no_aux");
+                        echo "Common Name:"
+                        echo # newline
+                        echo "${certText}" | grep "Subject:" | sed -e "s/^.*CN=//";
+                        echo # newline
+                        echo "Subject Alternative Name(s):"
+                        echo # newline
+                        echo "${certText}" | grep -A 1 "Subject Alternative Name:" \
+                                | sed -e "2s/DNS://g" -e "s/ //g" | tr "," "\n" | tail -n +2
+                        return 0
+        else
+                echo "ERROR: Certificate not found.";
+                return 1
+        fi
+}
+
+# Curl size of a site
+function curl-size() {
+	curl -vX HEAD $1 2>&1| grep '< Content-Length:' | grep -o '[0-9]+'
+}
+
+# Directory size
+function sizeof() {
+	du -hs $1 | awk '{print $1}';
+}
+
+# Function to check for gzip
+function check_compression {
+#	curl -I -H 'Accept-Encoding: gzip,deflate' $1 |grep "Content-Encoding"
+	curl -I -H 'Accept-Encoding: gzip,deflate' $1
+}
+
+# Password Gen
+genpasswd() {
+	pwgen -Bs $1 1 |pbcopy |pbpaste; echo “Has been copied to clipboard”
+}
+
+# TTL Checker - Usage: ttlchecker www.maxcdn.com
+function ttlchecker () {
+	echo "Google:"; dig $1 @8.8.8.8 |grep -A1 "ANSWER SECTION" |sed '/;;/d' && dig $1 @8.8.4.4 |grep -A1 "ANSWER SECTION" |sed '/;;/d';
+    echo "----------------------------"
+    echo "Level 3 (4.2.2.x):"; dig $1 @4.2.2.1 |grep -A1 "ANSWER SECTION" |sed '/;;/d' && dig $1 @4.2.2.2 |grep -A1 "ANSWER SECTION" |sed '/;;/d';
+    echo "----------------------------"
+    echo "OpenDNS:"; dig $1 @208.67.222.222 |grep -A1 "ANSWER SECTION" |sed '/;;/d' && dig $1 @208.67.220.220 |grep -A1 "ANSWER SECTION" |sed '/;;/d';
+}
+
+function link_files () {
+  ln -s $1 $2
+  success "linked $1 to $2"
+}
+
+extract () {
+  if [ -f $1 ]; then
+    case $1 in
+      *.tar.bz2)  tar -jxvf $1                                          ;;
+      *.tar.gz)   tar -zxvf $1                                          ;;
+      *.bz2)      bunzip2 $1                                            ;;
+      *.dmg)      hdiutil mount $1                                      ;;
+      *.gz)       gunzip $1                                             ;;
+      *.rar)      unrar e $1                                            ;;
+      *.tar)      tar -xvf $1                                           ;;
+      *.tbz2)     tar -jxvf $1                                          ;;
+      *.tgz)      tar -zxvf $1                                          ;;
+      *.zip)      unzip $1                                              ;;
+      *.ZIP)      unzip $1                                              ;;
+      *.pax)      cat $1 | pax -r                                       ;;
+      *.pax.Z)    uncompress $1 --stdout | pax -r                       ;;
+      *.Z)        uncompress $1                                         ;;
+      *)          echo "'$1' cannot be extracted/mounted via extract()" ;;
+    esac
+  else
+    echo "'$1' is not a valid file"
+  fi
+}
+
+# Chrome Screenshot
+screenshot-url() {
+   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+   --headless \
+   --disable-gpu \
+   --screenshot="${2:-screenshot.png}" \
+   --window-size=1920x1080 \
+   "${1:?Missing url}"
+ }
+ 
+# Locate Update/Search
+function locate () {
+	local MAXAGE=$(( 24 * 60*60 )) # twenty-four hours, in seconds.
+	local NOW="$(date +%s)"
+	local DB="/var/db/locate.database"
+
+	if [ ! -e "$DB" ]
+	then
+		echo "$FUNCNAME: $DB does not exist. Initializing..." > /dev/stderr
+		sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist > /dev/stderr
+		echo "$FUNCNAME: Please try again in a few minutes." > /dev/stderr
+		return -1 # stop and fail, there's nothing we can do until the database has been created.
+	fi
+
+	local DBCREATED="$(eval $(stat -s $DB); echo $st_mtime )"
+	local DBAGE="$(( $NOW - $MAXAGE ))"
+
+	if [ $DBAGE -gt $NOW ]
+	then
+		echo "$FUNCNAME: $DB is more than $(( $MAXAGE / (60*60) )) hours old. Updating..." > /dev/stderr
+		sudo launchctl start com.apple.locate > /dev/stderr
+		echo "$FUNCNAME: stale results: " > /dev/stderr
+	fi
+	command locate "$@"
+ }
+ 
+ # Start live reload in current directory
+ function live () {
+	 site_path="$(cd "$(dirname "$0")" && pwd)"
+	 livereloadx $site_path
+ }
+ 
+ # SSH hosts
+ complete -W "$(echo $(grep '^Host ' ~/.ssh/config | sort -u | sed 's/^Host //'))" ssh

@@ -1,0 +1,103 @@
+# Example aliases
+alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# Old .bash_profile
+# Directory changing
+alias ..='cd ..'
+alias cd..='cd ..'
+
+# GPG
+alias encrypt="gpg --armor --encrypt --recipient "
+alias decrypt="gpg --decrypt "
+
+alias updatedb='echo "Updating locate database...";sudo -u root /usr/libexec/locate.updatedb;echo "Updating complete!"'
+alias gitlines="git ls-files | xargs wc -l"
+
+alias fixperms='sudo diskutil verifyvolume /; sudo /usr/libexec/repair_packages --verify --standard-pkgs /; sudo /usr/libexec/repair_packages --repair --standard-pkgs --volume /'
+alias diskperms='sudo /usr/libexec/repair_packages --verify --standard-pkgs /;sudo /usr/libexec/repair_packages --repair --standard-pkgs --volume /'
+
+alias backuppicturesremote='cd ~/Pictures;time rsync -a --numeric-ids --stats --inplace * shelby@denike.ddns.net:/mnt/NAS/Multimedia/Pictures/'
+alias backuppictureslocal='cd ~/Pictures;time rsync -a --numeric-ids --stats --inplace --progress * shelby@10.0.1.100:/mnt/NAS/Multimedia/Pictures/'
+alias backuppicturesamazon='time rclone sync ~/Pictures/ Amazon:denike/Pictures/'
+alias lcase='rename -f 'y/A-Z/a-z/' *'
+
+# Hide/show all desktop icons (useful when presenting)
+alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+
+# Open in current text editor (currently TextMate)
+alias o="mate -w"
+
+# 368 Downloads
+alias 368down="/usr/local/bin/youtube-dl https://www.youtube.com/user/caseyneistat -o '/mnt/NAS/Multimedia/Youtube/368/%(title)s.%(ext)s' --format 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --no-cache-dir --playlist-end 1 -R 50"
+
+
+# Recursively delete `.DS_Store` files
+alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
+
+# Get OS X Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages
+alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; sudo gem update; upgrade_oh_my_zsh'
+
+
+
+# Fix Open With Menu
+alias fixowmenu='/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -kill -r -domain local -domain user;killall Finder;echo "Open With has been rebuilt, Finder will relaunch"'
+
+# Empty the Trash on all mounted volumes and the main HDD
+# Also, clear Apple’s System Logs to improve shell startup speed
+alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl"
+
+# gui - Visualizing branch topology in git - Stack Overflow
+# http://stackoverflow.com/a/1838938/1223426
+alias glb='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s"'
+
+# Open Textmate recovery folder
+alias recovertm='cd ~/Library/Application\ Support/TextMate/Session/; open .'
+
+# Flush DNS (OS X)
+alias flushdns="dscacheutil -flushcache"
+alias dnsflush="flushdns"
+
+# File size
+alias fs="stat -f '%z bytes'"
+alias df="df -h"
+
+# Speed Test
+#alias speedtest='echo "scale=2; `curl  --progress-bar -w "%{speed_download}" http://speedtest.wdc01.softlayer.com/downloads/test10.zip -o test.zip ` / 131072" | bc | xargs -I {} echo {}Mb\/s'
+#alias speedtest='echo "scale=2; `curl  --progress-bar -w "%{speed_download}" https://androidnetworktester.googlecode.com/files/10mb.txt -o test.zip ` / 131072" | bc | xargs -I {} echo {}Mb\/s'
+#alias speedtest='echo "scale=2; `curl  --progress-bar -w "%{speed_download}" http://cachefly.cachefly.net/10mb.test -o test.zip ` / 131072" | bc | xargs -I {} echo {}Mb\/s ; rm test.zip'
+#alias speedtest1='echo "scale=2; `curl  --progress-bar -w "%{speed_download}" http://testmy.net/dl-10MB -o test.zip ` / 131072" | bc | xargs -I {} echo {}Mb\/s  ; rm test.zip'
+
+# Speedtest CLI
+alias speedtest="speedtest-cli --simple"
+
+# Gist
+alias gist="gist -c -p"
+
+# Whats my IP
+alias what-is-my-ip="curl v4.ifconfig.co"
+
+# GMT Date
+alias gmt-date="date -u"
+
+# Kill spotlight
+alias killspot='sudo chmod 000 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search;sudo killall SystemUIServer'
+
+# Edit the hosts file
+alias hosts="o /etc/hosts"
+
+# Quick look a file.
+alias ql='qlmanage -p "$@" >& /dev/null'
+
+# Enable pigz on tar
+alias tar='tar --use-compress-program=pigz'
+
+alias battery-info='system_profiler -detailLevel mini SPPowerDataType'
+
+# Progress stats for copy/move
+alias progcp='nice -9 rsync -ah --progress --numeric-ids --stats --inplace'
+alias progmv='nice -9 rsync --progress -ah --remove-sent-files'
+
+# Locate Update/Search
+alias locate="locate -i" # case insensitive
