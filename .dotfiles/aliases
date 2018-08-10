@@ -2,7 +2,6 @@
 alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# Old .bash_profile
 # Directory changing
 alias ..='cd ..'
 alias cd..='cd ..'
@@ -29,17 +28,11 @@ alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && k
 # Open in current text editor (currently TextMate)
 alias o="mate -w"
 
-# 368 Downloads
-alias 368down="/usr/local/bin/youtube-dl https://www.youtube.com/user/caseyneistat -o '/mnt/NAS/Multimedia/Youtube/368/%(title)s.%(ext)s' --format 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --no-cache-dir --playlist-end 1 -R 50"
-
-
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 
 # Get OS X Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages
 alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; sudo gem update; upgrade_oh_my_zsh'
-
-
 
 # Fix Open With Menu
 alias fixowmenu='/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -kill -r -domain local -domain user;killall Finder;echo "Open With has been rebuilt, Finder will relaunch"'
